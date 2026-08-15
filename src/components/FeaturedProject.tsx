@@ -1,5 +1,6 @@
-import { motion } from 'framer-motion'
-import { ArrowUpRight, Trophy } from 'lucide-react'
+import { useEffect, useState } from 'react'
+import { AnimatePresence, motion } from 'framer-motion'
+import { ArrowUpRight, Download, Eye, Trophy, X, ZoomIn } from 'lucide-react'
 import { featuredProject } from '../data/projects'
 import { GithubIcon } from './icons'
 
@@ -33,6 +34,17 @@ function NetworkVisual() {
 
 export default function FeaturedProject() {
   const p = featuredProject
+  const [lightboxOpen, setLightboxOpen] = useState(false)
+
+  useEffect(() => {
+    if (!lightboxOpen) return
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setLightboxOpen(false)
+    }
+    window.addEventListener('keydown', handler)
+    return () => window.removeEventListener('keydown', handler)
+  }, [lightboxOpen])
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 24 }}
@@ -78,10 +90,18 @@ export default function FeaturedProject() {
           </div>
 
           <div className="mt-7 flex flex-wrap gap-3">
+            {p.posterImage && (
+              <button
+                onClick={() => setLightboxOpen(true)}
+                className="inline-flex items-center gap-1.5 rounded-full bg-[var(--color-accent)] px-5 py-2.5 text-sm font-semibold text-white transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_16px_32px_-14px_var(--color-accent)]"
+              >
+                <Eye size={14} /> View Poster
+              </button>
+            )}
             {p.projectUrl && !p.projectUrl.startsWith('[ADD') && (
               <a
                 href={p.projectUrl}
-                className="inline-flex items-center gap-1.5 rounded-full bg-[var(--color-accent)] px-5 py-2.5 text-sm font-semibold text-white transition-transform hover:-translate-y-0.5"
+                className="inline-flex items-center gap-1.5 rounded-full border border-[var(--color-border)] px-5 py-2.5 text-sm font-semibold text-[var(--color-text)] transition-all duration-300 hover:-translate-y-0.5 hover:border-[var(--color-accent)] hover:bg-[var(--color-card-hover)]"
               >
                 View Project <ArrowUpRight size={14} />
               </a>
@@ -97,12 +117,87 @@ export default function FeaturedProject() {
           </div>
         </div>
 
-        <div className="relative min-h-[220px] border-t border-[var(--color-border)] bg-[var(--color-bg-secondary)] lg:border-l lg:border-t-0">
-          <div className="grid-fade-mask absolute inset-0 p-6 transition-transform duration-500 group-hover:scale-105">
-            <NetworkVisual />
-          </div>
+        <div className="relative min-h-[220px] overflow-hidden border-t border-[var(--color-border)] bg-[var(--color-bg-secondary)] lg:border-l lg:border-t-0">
+          {p.posterImage ? (
+            <button
+              onClick={() => setLightboxOpen(true)}
+              aria-label={`View ${p.title} poster full-size`}
+              className="absolute inset-0 h-full w-full cursor-zoom-in"
+            >
+              <img
+                src={p.posterImage}
+                alt={`${p.title} project poster`}
+                className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+              />
+              {/* hover overlay */}
+              <div className="absolute inset-0 flex items-center justify-center bg-[var(--color-bg)]/0 opacity-0 backdrop-blur-0 transition-all duration-300 group-hover:bg-[var(--color-bg)]/55 group-hover:opacity-100 group-hover:backdrop-blur-[2px]">
+                <span className="flex translate-y-2 items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-xs font-semibold text-white opacity-0 shadow-lg backdrop-blur-md transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100">
+                  <ZoomIn size={14} /> View Full Poster
+                </span>
+              </div>
+            </button>
+          ) : (
+            <div className="grid-fade-mask absolute inset-0 p-6 transition-transform duration-500 group-hover:scale-105">
+              <NetworkVisual />
+            </div>
+          )}
         </div>
       </div>
+
+      {/* Lightbox */}
+      <AnimatePresence>
+        {lightboxOpen && p.posterImage && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 p-4 backdrop-blur-sm"
+            role="dialog"
+            aria-modal="true"
+            aria-label={`${p.title} poster`}
+            onClick={() => setLightboxOpen(false)}
+          >
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 10 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 10 }}
+              transition={{ duration: 0.25 }}
+              onClick={(e) => e.stopPropagation()}
+              className="w-full max-w-5xl rounded-2xl border border-[var(--color-border)] bg-[var(--color-card)] p-4 sm:p-5"
+            >
+              <div className="flex items-center justify-between gap-4">
+                <div>
+                  <h3 className="text-sm font-semibold text-[var(--color-text)] sm:text-base">{p.title} — Project Poster</h3>
+                  {p.fullName && <p className="mt-0.5 text-xs text-[var(--color-text-secondary)]">{p.fullName}</p>}
+                </div>
+                <button
+                  onClick={() => setLightboxOpen(false)}
+                  aria-label="Close"
+                  className="shrink-0 rounded-full border border-[var(--color-border)] p-1.5 text-[var(--color-text-secondary)] transition-all duration-300 hover:border-[var(--color-accent)] hover:bg-[var(--color-card-hover)] hover:text-[var(--color-text)]"
+                >
+                  <X size={16} />
+                </button>
+              </div>
+
+              <div className="mt-4 overflow-hidden rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-secondary)]">
+                <img
+                  src={p.posterImageFull ?? p.posterImage}
+                  alt={`${p.title} project poster full size`}
+                  className="max-h-[75vh] w-full object-contain"
+                />
+              </div>
+
+              <a
+                href={p.posterImageFull ?? p.posterImage}
+                download
+                className="btn-glow mt-4 inline-flex items-center gap-1.5 rounded-full bg-[var(--color-accent)] px-4 py-2 text-xs font-semibold text-white transition-all duration-300 hover:-translate-y-0.5"
+              >
+                <Download size={13} /> Download Poster
+              </a>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </motion.div>
   )
 }

@@ -14,6 +14,8 @@ export type Project = {
   githubUrl?: string
   featured?: boolean
   size?: 'lg' | 'md' | 'sm'
+  posterImage?: string
+  posterImageFull?: string
 }
 
 export const filters: { label: string; value: 'all' | ProjectCategory }[] = [
@@ -40,6 +42,8 @@ export const featuredProject: Project = {
   projectUrl: '[ADD PROJECT URL]',
   githubUrl: '[ADD GITHUB PROJECT URL]',
   featured: true,
+  posterImage: '/projects/snips-poster.jpg',
+  posterImageFull: '/projects/snips-poster-full.png',
 }
 
 export const projects: Project[] = [
