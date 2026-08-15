@@ -15,6 +15,7 @@ import Footer from './components/Footer'
 import ScrollToTopButton from './components/ScrollToTopButton'
 import { useTheme } from './hooks/useTheme'
 import { useReducedMotion } from './hooks/useReducedMotion'
+import { scrollToId } from './utils/scroll'
 
 export default function App() {
   const { theme, toggleTheme } = useTheme()
@@ -23,6 +24,24 @@ export default function App() {
   useEffect(() => {
     document.documentElement.classList.toggle('reduce-motion', reducedMotion)
   }, [reducedMotion])
+
+  useEffect(() => {
+    const scrollToCurrentHash = () => {
+      const hash = window.location.hash
+      if (!hash) return
+
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          scrollToId(hash)
+        })
+      })
+    }
+
+    scrollToCurrentHash()
+    window.addEventListener('hashchange', scrollToCurrentHash)
+
+    return () => window.removeEventListener('hashchange', scrollToCurrentHash)
+  }, [])
 
   return (
     <div className="min-h-screen bg-[var(--color-bg)] text-[var(--color-text)]">

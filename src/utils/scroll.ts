@@ -1,5 +1,5 @@
 export function scrollToId(id: string) {
-  const target = id.replace('#', '')
+  const target = id.replace(/^#/, '')
 
   if (target === 'home') {
     window.scrollTo({ top: 0, behavior: 'smooth' })
@@ -7,7 +7,16 @@ export function scrollToId(id: string) {
   }
 
   const el = document.getElementById(target)
-  if (el) {
-    el.scrollIntoView({ behavior: 'smooth', block: 'start' })
-  }
+  if (!el) return
+
+  const navbarOffset = 88
+  const top = Math.max(
+    0,
+    window.scrollY + el.getBoundingClientRect().top - navbarOffset,
+  )
+
+  window.scrollTo({
+    top,
+    behavior: 'smooth',
+  })
 }
