@@ -23,7 +23,7 @@ export default function WhatIBuild() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-60px' }}
               transition={{ duration: 0.5, delay: i * 0.08 }}
-              className="card-surface group relative flex flex-col rounded-2xl p-6 transition-all duration-300 hover:-translate-y-1 hover:border-[var(--color-accent)]"
+              className="card-surface group relative flex flex-col rounded-2xl p-6 transition-all duration-300 hover:-translate-y-1 hover:border-[var(--color-accent)] hover:bg-[var(--color-card-hover)] hover:shadow-[0_20px_44px_-24px_rgba(79,124,255,0.35)]"
             >
               <div className="flex items-start justify-between">
                 <span className="font-mono-tech text-2xl font-bold text-[var(--color-border)] transition-colors group-hover:text-[var(--color-accent)]">

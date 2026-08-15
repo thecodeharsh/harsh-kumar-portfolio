@@ -26,7 +26,7 @@ export default function Skills() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-60px' }}
             transition={{ duration: 0.5, delay: ci * 0.08 }}
-            className={`card-surface flex flex-col rounded-2xl p-6 transition-all duration-300 hover:-translate-y-1 hover:border-[var(--color-accent)] hover:shadow-[0_20px_44px_-24px_rgba(79,124,255,0.35)] ${spans[category.id] ?? ''}`}
+            className={`card-surface flex flex-col rounded-2xl p-6 transition-all duration-300 hover:-translate-y-1 hover:border-[var(--color-accent)] hover:bg-[var(--color-card-hover)] hover:shadow-[0_20px_44px_-24px_rgba(79,124,255,0.35)] ${spans[category.id] ?? ''}`}
           >
             <div className="flex items-baseline justify-between">
               <h3 className="text-lg font-semibold text-[var(--color-text)]">{category.title}</h3>

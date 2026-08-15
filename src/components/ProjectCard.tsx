@@ -17,7 +17,7 @@ export default function ProjectCard({ project, index }: { project: Project; inde
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, scale: 0.96 }}
       transition={{ duration: 0.35, delay: index * 0.05 }}
-      className={`group flex h-full flex-col card-surface rounded-2xl p-6 transition-all duration-300 hover:-translate-y-1 hover:border-[var(--color-accent)] ${sizeClasses[project.size ?? 'md']}`}
+      className={`group flex h-full flex-col card-surface rounded-2xl p-6 transition-all duration-300 hover:-translate-y-1 hover:border-[var(--color-accent)] hover:bg-[var(--color-card-hover)] hover:shadow-[0_20px_44px_-24px_rgba(79,124,255,0.35)] ${sizeClasses[project.size ?? 'md']}`}
     >
       <div className="flex items-center justify-between">
         <span className="font-mono-tech text-xs font-semibold text-[var(--color-text-secondary)]">{project.number}</span>
