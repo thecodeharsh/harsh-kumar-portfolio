@@ -23,7 +23,7 @@ export const experience: ExperienceItem[] = [
     role: 'Summer Internship',
     period: 'May 2026 – June 2026',
     technologies: [], // [ADD TECHNOLOGIES]
-    description: '[ADD INTERNSHIP DESCRIPTION]',
+    description: 'Completed a Summer Internship with North Western Railway, Jaipur Division, gaining practical exposure to railway operations, communication systems, and the technical working environment of the railway sector.',
   },
   {
     id: 'gayatri',
