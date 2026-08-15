@@ -40,7 +40,7 @@ export default function Navbar({ theme, onToggleTheme }: Props) {
               e.preventDefault()
               handleNav('#home')
             }}
-            className="flex items-center gap-2 font-mono-tech text-sm font-bold text-[var(--color-text)] [touch-action:manipulation]"
+            className="flex items-center gap-2 font-mono-tech text-sm font-bold text-[var(--color-text)]"
           >
             <Logo size={32} />
             <span className="hidden tracking-tight sm:inline">Harsh Kumar</span>
@@ -59,7 +59,7 @@ export default function Navbar({ theme, onToggleTheme }: Props) {
                       e.preventDefault()
                       handleNav(link.href)
                     }}
-                    className={`relative rounded-lg px-3 py-2 text-sm font-medium transition-all duration-300 [touch-action:manipulation] ${
+                    className={`relative rounded-lg px-3 py-2 text-sm font-medium transition-all duration-300 ${
                       isActive
                         ? 'text-[var(--color-text)]'
                         : 'text-[var(--color-text-secondary)] hover:bg-[var(--color-card-hover)] hover:text-[var(--color-text)]'
@@ -85,7 +85,7 @@ export default function Navbar({ theme, onToggleTheme }: Props) {
             <a
               href={profile.resumePath}
               download
-              className="btn-glow hidden items-center gap-1.5 rounded-full bg-[var(--color-accent)] px-4 py-2 text-xs font-semibold text-white transition-all duration-300 hover:-translate-y-0.5 sm:flex [touch-action:manipulation]"
+              className="btn-glow hidden items-center gap-1.5 rounded-full bg-[var(--color-accent)] px-4 py-2 text-xs font-semibold text-white transition-all duration-300 hover:-translate-y-0.5 sm:flex"
             >
               <Download size={13} />
               Resume
@@ -93,7 +93,7 @@ export default function Navbar({ theme, onToggleTheme }: Props) {
 
             <button
               onClick={() => setMobileOpen((v) => !v)}
-              className="flex h-9 w-9 items-center justify-center rounded-full border border-[var(--color-border)] text-[var(--color-text)] transition-all duration-300 hover:border-[var(--color-accent)] hover:bg-[var(--color-card-hover)] lg:hidden [touch-action:manipulation]"
+              className="flex h-9 w-9 items-center justify-center rounded-full border border-[var(--color-border)] text-[var(--color-text)] transition-all duration-300 hover:border-[var(--color-accent)] hover:bg-[var(--color-card-hover)] lg:hidden"
               aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
               aria-expanded={mobileOpen}
             >
@@ -116,8 +116,21 @@ export default function Navbar({ theme, onToggleTheme }: Props) {
                   <li key={link.href}>
                     <a
                       href={link.href}
-                      onClick={() => setMobileOpen(false)}
-                      className="block touch-manipulation select-none rounded-xl px-4 py-3 text-sm font-medium text-[var(--color-text-secondary)] transition-all duration-300 [-webkit-tap-highlight-color:transparent] [touch-action:manipulation] hover:translate-x-1 hover:bg-[var(--color-card-hover)] hover:text-[var(--color-text)]"
+                      onClick={(e) => {
+                        e.preventDefault()
+                        handleNav(link.href)
+                      }}
+                      onTouchEnd={(e) => {
+                        // Mobile WebKit/Chrome sometimes fails to synthesize a
+                        // click from a tap on <a> tags nested inside a fixed +
+                        // Framer Motion transform-animated container. Handle
+                        // the tap directly and stop it from double-firing
+                        // alongside the click handler above.
+                        e.preventDefault()
+                        handleNav(link.href)
+                      }}
+                      style={{ touchAction: 'manipulation', WebkitTapHighlightColor: 'transparent' }}
+                      className="relative z-10 block rounded-xl px-4 py-3 text-sm font-medium text-[var(--color-text-secondary)] transition-all duration-300 hover:translate-x-1 hover:bg-[var(--color-card-hover)] hover:text-[var(--color-text)]"
                     >
                       {link.label}
                     </a>
@@ -127,7 +140,7 @@ export default function Navbar({ theme, onToggleTheme }: Props) {
                   <a
                     href={profile.resumePath}
                     download
-                    className="flex flex-1 items-center justify-center gap-1.5 rounded-xl bg-[var(--color-accent)] px-4 py-2.5 text-sm font-semibold text-white [touch-action:manipulation]"
+                    className="flex flex-1 items-center justify-center gap-1.5 rounded-xl bg-[var(--color-accent)] px-4 py-2.5 text-sm font-semibold text-white"
                   >
                     <Download size={14} /> Resume
                   </a>
