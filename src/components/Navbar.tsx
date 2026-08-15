@@ -3,7 +3,6 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { Download, Menu, X } from 'lucide-react'
 import { navLinks, profile } from '../data/profile'
 import { useActiveSection, useScrolled } from '../hooks/useActiveSection'
-import { scrollToId } from '../utils/scroll'
 import ThemeToggle from './ThemeToggle'
 import Logo from './Logo'
 
@@ -16,11 +15,6 @@ export default function Navbar({ theme, onToggleTheme }: Props) {
   const [mobileOpen, setMobileOpen] = useState(false)
   const scrolled = useScrolled(24)
   const active = useActiveSection(navLinks.map((l) => l.href.replace('#', '')))
-
-  const handleNav = (href: string) => {
-    scrollToId(href)
-    setMobileOpen(false)
-  }
 
   return (
     <header className="fixed inset-x-0 top-0 z-50">
@@ -36,10 +30,6 @@ export default function Navbar({ theme, onToggleTheme }: Props) {
         >
           <a
             href="#home"
-            onClick={(e) => {
-              e.preventDefault()
-              handleNav('#home')
-            }}
             className="flex items-center gap-2 font-mono-tech text-sm font-bold text-[var(--color-text)]"
           >
             <Logo size={32} />
@@ -55,10 +45,6 @@ export default function Navbar({ theme, onToggleTheme }: Props) {
                 <li key={link.href} className="relative">
                   <a
                     href={link.href}
-                    onClick={(e) => {
-                      e.preventDefault()
-                      handleNav(link.href)
-                    }}
                     className={`relative rounded-lg px-3 py-2 text-sm font-medium transition-all duration-300 ${
                       isActive
                         ? 'text-[var(--color-text)]'
@@ -116,21 +102,8 @@ export default function Navbar({ theme, onToggleTheme }: Props) {
                   <li key={link.href}>
                     <a
                       href={link.href}
-                      onClick={(e) => {
-                        e.preventDefault()
-                        handleNav(link.href)
-                      }}
-                      onTouchEnd={(e) => {
-                        // Mobile WebKit/Chrome sometimes fails to synthesize a
-                        // click from a tap on <a> tags nested inside a fixed +
-                        // Framer Motion transform-animated container. Handle
-                        // the tap directly and stop it from double-firing
-                        // alongside the click handler above.
-                        e.preventDefault()
-                        handleNav(link.href)
-                      }}
-                      style={{ touchAction: 'manipulation', WebkitTapHighlightColor: 'transparent' }}
-                      className="relative z-10 block rounded-xl px-4 py-3 text-sm font-medium text-[var(--color-text-secondary)] transition-all duration-300 hover:translate-x-1 hover:bg-[var(--color-card-hover)] hover:text-[var(--color-text)]"
+                      onClick={() => setMobileOpen(false)}
+                      className="block rounded-xl px-4 py-3 text-sm font-medium text-[var(--color-text-secondary)] transition-all duration-300 hover:translate-x-1 hover:bg-[var(--color-card-hover)] hover:text-[var(--color-text)]"
                     >
                       {link.label}
                     </a>
